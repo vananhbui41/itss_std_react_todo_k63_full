@@ -1,6 +1,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+// import 'firebase/compat/storage';
 
 const firebaseConfig = {
     apiKey: "AIzaSyD8JLz80X1IL6bah0lB1HfiWQ9I6IW7Pxk",
@@ -14,8 +15,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
-export default firebase;
 export const auth = firebase.auth();
+export default firebase;
 
 export const getFirebaseItems = async () => {
   try {
@@ -56,7 +57,7 @@ export const clearFirebaseItem = async (item) => {
   }).catch(function (err) {
     console.log(err);
   });
-};
+}
 
 export const uiConfig = {
   signInFlow: 'popup',
@@ -93,3 +94,15 @@ export const updateUser = async (user, image) => {
     console.log(err);
   }
 }
+
+export const uploadImage = async (image) => {
+  const ref = firebase.storage().ref().child(`/images/${image.name}`);
+  let downloadUrl = "";
+  try {
+    await ref.put(image);
+    downloadUrl = await ref.getDownloadURL();
+  } catch (err) {
+    console.log(err);
+  }
+  return downloadUrl;
+};
